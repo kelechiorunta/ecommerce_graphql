@@ -1,0 +1,23 @@
+{
+  "name": "ecommerce_graphql",
+  "version": "1.0.0",
+  "main": "server.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.ts"
+  },
+  "keywords": [
+    "GraphQL HTTP Server"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "GraphQL HTTP Server managing query, mutation and subscription ws api endpoints for the ECommerce Project",
+  "dependencies": {
+    "express": "^5.2.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6"
+  }
+}
