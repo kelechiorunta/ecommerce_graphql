@@ -14,10 +14,17 @@
   "description": "GraphQL HTTP Server managing query, mutation and subscription ws api endpoints for the ECommerce Project",
   "dependencies": {
     "express": "^5.2.1",
+    "express-graphql": "^0.12.0",
+    "graphql-http": "^1.22.4",
+    "graphql-ws": "^6.0.8",
     "ts-node": "^10.9.2",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "ws": "^8.21.0"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6"
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.0.0",
+    "@types/ws": "^8.18.1",
+    "nodemon": "^3.1.14"
   }
 }
