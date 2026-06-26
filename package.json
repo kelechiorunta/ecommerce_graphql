@@ -13,6 +13,7 @@
   "license": "ISC",
   "description": "GraphQL HTTP Server managing query, mutation and subscription ws api endpoints for the ECommerce Project",
   "dependencies": {
+    "axios": "^1.18.1",
     "express": "^5.2.1",
     "express-graphql": "^0.12.0",
     "graphql-http": "^1.22.4",
