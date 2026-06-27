@@ -16,6 +16,7 @@ export const ProductType = new GraphQLObjectType({
     price: { type: GraphQLFloat },
     producer_name: {type: GraphQLString},
     category_name: {type: GraphQLString},
+    image_url: {type: GraphQLString},
   },
 
 });
