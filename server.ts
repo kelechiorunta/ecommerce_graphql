@@ -7,10 +7,13 @@ import { useServer } from 'graphql-ws/use/ws';
 
 import { producer } from './kafka/producer';
 import { consumer } from './kafka/consumer';
-import { Topics } from './kafka/topics';
-import { emitter } from './kafka/emitter';
+
 import schema from './graphql/schema/schema';
 import { newChatBus } from './chatbus';
+import { Topics } from './kafka/topics';
+import { topicEventMap, TopicEventMapType } from './kafka/topicsEventMap';
+const controller = new AbortController();
+const { signal } = controller;
 
 const PORT = 4002;
 
@@ -58,7 +61,8 @@ useServer(
       console.log('WS Connected');
     },
 
-    onSubscribe(ctx, msg: any) {
+    onSubscribe(ctx: any, msg: any) {
+      console.log('CTX', ctx);
       console.log('Subscription:', msg.payload);
     },
 
@@ -91,20 +95,31 @@ wsServer.on('connection', () => {
 export const startKafkaConsumer = async () => {
   await consumer.connect();
 
-  await consumer.subscribe({
-    topic: 'products',
-    fromBeginning: true
-  });
+  const topics = Object.values(Topics);
+  for (const topic of topics) {
+    await consumer.subscribe({
+      topic,
+      fromBeginning: true
+    });
+  }
 
+  // Subscribe to all graphql subscribers based on the topic
   await consumer.run({
-    eachMessage: async ({ message }) => {
-      const product = JSON.parse(message.value!.toString());
+    eachMessage: async ({ topic, message }: { topic: any; message: any }) => {
+      const payload = JSON.parse(message.value!.toString());
 
+      // Emit/Publish the event and data from the payload with the chatBus based on the corresponding topic
+      // //key of the topicEventMapType
+      //// const events = topicEventMap[topic as keyof TopicEventMapType] as string[];
+      // Add a bit of debounce for the Chatbus emission
       setTimeout(() => {
-        newChatBus.emit('NEW_PRODUCT', product);
+        // Add abort signal to prevent memory leaks
+        newChatBus.emit(payload.event, payload.data, { signal: controller.signal });
       }, 0);
 
-      console.log('Product emitted to graphql subscriber');
+      console.log(`${payload.event} emitted from ${topic} topic to graphql subscriber`);
+      // Call the abort function once every emission
+      controller.abort();
     }
   });
 };
